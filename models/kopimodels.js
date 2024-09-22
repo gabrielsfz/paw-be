@@ -1,0 +1,18 @@
+const mongoose = require("mongoose");
+
+const userSchema = new mongoose.Schema({
+  namaKopi: {
+    type: String,
+    required: true,
+  },
+  harga:{
+    type: Number,
+    required: true,
+  },
+  deskripsi: {
+    type: String,
+    required: true
+  }
+});
+
+module.exports = mongoose.model("Kopi", userSchema);
