@@ -1,5 +1,5 @@
 exports.makeFilterKopi = (req, res) => {
-  const { hargaMin, hargaMax } = req.query;
+  const { hargaMin, hargaMax, nama } = req.query;
 
   let filterQuery = {};
 
@@ -9,6 +9,10 @@ exports.makeFilterKopi = (req, res) => {
     filterQuery.harga = { $gte: hargaMin };
   } else if (hargaMax !== undefined) {
     filterQuery.harga = { $lte: hargaMax };
+  }
+
+  if (nama !== undefined) {
+    filterQuery.nama = { $regex: nama, $options: "i" };
   }
 
   return filterQuery;
