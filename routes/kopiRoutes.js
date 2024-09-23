@@ -5,8 +5,6 @@ const {
   readKopi,
   deleteKopi,
   updateKopi,
-  sortkopi,
-  filterKopi,
 } = require("../controller/kopicontrol");
 
 UserRoutes.post("/", createKopi);

@@ -1,10 +1,11 @@
+const { makeFilterKopi, makeSortKopi } = require("../helper/kopihelper");
 const Kopi = require("../models/kopimodels");
 
 exports.createKopi = async (req, res) => {
-  const { namaKopi, harga, deskripsi } = req.body;
+  const { nama, harga, deskripsi } = req.body;
 
   const kopi = new Kopi({
-    namaKopi,
+    nama,
     harga,
     deskripsi,
   });
@@ -13,7 +14,7 @@ exports.createKopi = async (req, res) => {
     .then(() => {
       res.status(200).json({
         message: "Kopi created successfully!",
-        data: Kopi,
+        data: kopi,
       });
     })
     .catch((err) => {
@@ -24,22 +25,27 @@ exports.createKopi = async (req, res) => {
 };
 
 exports.readKopi = async (req, res) => {
-  Kopi.find()
-    .then((coffees) => {
-      res.status(200).json({
-        data: coffees,
-      });
-    })
-    .catch((err) => {
-      res.status(400).json({
-        error: err,
-      });
+  try {
+    const filterQuery = makeFilterKopi(req, res);
+    const sortQuery = makeSortKopi(req, res);
+
+    const coffees = await Kopi.find(filterQuery).sort(sortQuery);
+
+    res.status(200).json({
+      data: coffees,
     });
+  } catch (err) {
+    console.log(err);
+
+    res.status(400).json({
+      error: err,
+    });
+  }
 };
 
 exports.deleteKopi = async (req, res) => {
-  const { idKopi } = req.params;
-  Kopi.findByIdAndDelete(idKopi)
+  const { id } = req.params;
+  Kopi.findByIdAndDelete(id)
     .then(() => {
       res.status(200).json({
         message: "Kopi deleted successfully!",
@@ -54,8 +60,8 @@ exports.deleteKopi = async (req, res) => {
 
 exports.updateKopi = async (req, res) => {
   const { id } = req.params;
-  const { namaKopi, harga, deskripsi } = req.body;
-  Kopi.findByIdAndUpdate(id, { namaKopi, harga, deskripsi })
+  const { nama, harga, deskripsi } = req.body;
+  Kopi.findByIdAndUpdate(id, { nama, harga, deskripsi })
     .then(() => {
       res.status(200).json({
         message: "Kopi updated successfully!",
@@ -66,50 +72,4 @@ exports.updateKopi = async (req, res) => {
         error: err,
       });
     });
-};
-
-exports.sortkopi = async (req, res) => {
-  const { sortBy = "namaKopi", order = "asc" } = req.body;
-
-  const sortOrder = order === "desc" ? -1 : 1;
-
-  try {
-    const kopis = await Kopi.find({}).sort({ [sortBy]: sortOrder });
-
-    res.status(200).json({
-      message: "Kopi sorted successfully!",
-      data: kopis,
-    });
-  } catch (err) {
-    res.status(400).json({
-      error: err.message,
-    });
-  }
-};
-
-exports.filterKopi = async (req, res) => {
-  const { hargaMin, hargaMax } = req.body;
-
-  let filterQuery = {};
-
-  if (hargaMin !== undefined && hargaMax !== undefined) {
-    filterQuery.harga = { $gte: hargaMin, $lte: hargaMax };
-  } else if (hargaMin !== undefined) {
-    filterQuery.harga = { $gte: hargaMin };
-  } else if (hargaMax !== undefined) {
-    filterQuery.harga = { $lte: hargaMax };
-  }
-
-  try {
-    const kopis = await Kopi.find(filterQuery);
-
-    res.status(200).json({
-      message: "Kopi filtered successfully!",
-      data: kopis,
-    });
-  } catch (err) {
-    res.status(400).json({
-      error: err.message,
-    });
-  }
 };

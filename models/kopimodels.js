@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  namaKopi: {
+  nama: {
     type: String,
     required: true,
   },
-  harga:{
+  harga: {
     type: Number,
     required: true,
   },
   deskripsi: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Kopi", userSchema);
