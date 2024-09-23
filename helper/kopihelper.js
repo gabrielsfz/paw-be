@@ -3,11 +3,11 @@ exports.makeFilterKopi = (req, res) => {
 
   let filterQuery = {};
 
-  if (hargaMin !== undefined && hargaMax !== undefined) {
+  if (hargaMin && hargaMax) {
     filterQuery.harga = { $gte: hargaMin, $lte: hargaMax };
-  } else if (hargaMin !== undefined) {
+  } else if (hargaMin) {
     filterQuery.harga = { $gte: hargaMin };
-  } else if (hargaMax !== undefined) {
+  } else if (hargaMax) {
     filterQuery.harga = { $lte: hargaMax };
   }
 
