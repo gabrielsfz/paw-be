@@ -1,9 +1,13 @@
 const UserRoutes = require("express").Router();
 
-const {createUser, readUser, deleteUser} = require("../controller/userControl");
+const {
+  createUser,
+  readUser,
+  deleteUser,
+} = require("../controller/userControl");
 
-UserRoutes.post("/create", createUser);
-UserRoutes.get("/read", readUser);
-UserRoutes.delete("/delete", deleteUser);
+UserRoutes.post("/", createUser);
+UserRoutes.get("/", readUser);
+UserRoutes.delete("/:id", deleteUser);
 
 module.exports = UserRoutes;
