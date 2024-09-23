@@ -1,5 +1,7 @@
 const UserRoutes = require("express").Router();
 
+const {verifyUser} = require('../middleware/auth');
+
 const {
   createKopi,
   readKopi,
@@ -7,9 +9,9 @@ const {
   updateKopi,
 } = require("../controller/kopicontrol");
 
-UserRoutes.post("/", createKopi);
+UserRoutes.post("/", verifyUser, createKopi);
 UserRoutes.get("/", readKopi);
-UserRoutes.delete("/:id", deleteKopi);
-UserRoutes.patch("/:id", updateKopi);
+UserRoutes.delete("/:id", verifyUser, deleteKopi);
+UserRoutes.patch("/:id", verifyUser, updateKopi);
 
 module.exports = UserRoutes;

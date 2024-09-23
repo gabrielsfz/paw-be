@@ -1,5 +1,6 @@
 const User = require('../models/userModels'); // Assuming you have a user model
 const bcrypt = require('bcryptjs'); // For password hashing
+const jwt =  require('jsonwebtoken');
 
 exports.login = async (req, res) => {
     const { name, password } = req.body;
@@ -31,6 +32,11 @@ exports.login = async (req, res) => {
                 message: "Incorrect password"
             });
         }
+
+        const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET_KEY);
+        res.cookie('jwt', token, {
+            expires: new Date.now() + 30 * 24 * 60 * 60 * 1000
+        });
 
         // Password is correct, login successful
         res.status(200).json({
