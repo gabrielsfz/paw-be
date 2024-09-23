@@ -2,12 +2,13 @@ const { makeFilterKopi, makeSortKopi } = require("../helper/kopihelper");
 const Kopi = require("../models/kopimodels");
 
 exports.createKopi = async (req, res) => {
-  const { nama, harga, deskripsi } = req.body;
+  const { nama, harga, deskripsi, image } = req.body;
 
   const kopi = new Kopi({
     nama,
     harga,
     deskripsi,
+    image,
   });
   kopi
     .save()
@@ -60,11 +61,12 @@ exports.deleteKopi = async (req, res) => {
 
 exports.updateKopi = async (req, res) => {
   const { id } = req.params;
-  const { nama, harga, deskripsi } = req.body;
-  Kopi.findByIdAndUpdate(id, { nama, harga, deskripsi })
-    .then(() => {
+  const { nama, harga, deskripsi, image } = req.body;
+  Kopi.findByIdAndUpdate(id, { nama, harga, deskripsi, image })
+    .then((coffee) => {
       res.status(200).json({
         message: "Kopi updated successfully!",
+        data: coffee,
       });
     })
     .catch((err) => {
