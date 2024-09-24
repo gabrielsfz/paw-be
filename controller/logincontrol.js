@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET_KEY);
         res.cookie('jwt', token, {
-            expires: new Date.now() + 30 * 24 * 60 * 60 * 1000
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
         });
 
         // Password is correct, login successful
