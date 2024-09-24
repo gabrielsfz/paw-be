@@ -1,35 +1,35 @@
-const User = require('../models/userModels');
+const User = require("../models/userModels");
+const jwt = require("jsonwebtoken");
 
-exports.verifyUser = async(req, res, next) => {
-    const token = req.cookies.jwt;
+exports.verifyUser = async (req, res, next) => {
+  const token = req.cookies.jwt;
 
-    if(!token){
-        return res.status(403).json({
-            message: 'missing credential'
-        });
-    }
-    
-    const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if(!decode){
-        return res.status(400).json({
-            status: 'invalid'
-        })
-    }
+  if (!token) {
+    return res.status(403).json({
+      message: "missing credential",
+    });
+  }
 
-    try {
-        const user = await User.findById(decode);
+  const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  if (!decode) {
+    return res.status(400).json({
+      status: "invalid",
+    });
+  }
 
-        if(!user){
-            return res.status(403)
-        }
-        
-        req.user = user;
-        
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Internal error'
-        });
+  try {
+    const user = await User.findById(decode);
+
+    if (!user) {
+      return res.status(403);
     }
 
-    next();
-}
+    req.user = user;
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal error",
+    });
+  }
+
+  next();
+};
